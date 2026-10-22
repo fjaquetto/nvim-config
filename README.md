@@ -122,6 +122,11 @@ No outro computador, instale pelo `:Mason` ou por:
 O `roslyn-language-server` substitui o antigo `csharp-language-server` e o
 OmniSharp na configuração atual.
 
+Os **inlay hints de C#** estão desativados (`inlay_hints.exclude = { "cs" }`)
+porque o Roslyn pode enviar colunas fora do range durante a edição, causando
+erro de extmark no Neovim 0.12. Isso não afeta diagnóstico, completion nem
+debug.
+
 ## Atualização
 
 ```bash
@@ -157,7 +162,7 @@ git restore .
 Voltar para uma tag estável:
 
 ```bash
-git reset --hard stable-2026-10-22.1
+git reset --hard stable-2026-10-22.2
 nvim --headless "+Lazy! restore" +qa
 ```
 
@@ -170,7 +175,7 @@ git revert <hash>
 Testar uma versão antiga sem mexer na `main`:
 
 ```bash
-git switch -c teste-config stable-2026-10-22.1
+git switch -c teste-config stable-2026-10-22.2
 nvim
 git switch main
 git branch -D teste-config
@@ -209,4 +214,7 @@ nvim -u NONE
 | `<leader>dr` | Abrir REPL do debug |
 | `<leader>dt` | Encerrar sessão de debug |
 
-No LazyGit, `ctrl+t` abre o `nvimdiff` para o arquivo selecionado.
+No LazyGit, `ctrl+t` abre o `nvimdiff` para o arquivo selecionado. Se você
+selecionar uma **pasta**, o LazyGit usa `git difftool --dir-diff`; o `nvimdiff`
+não faz diff de diretórios e o LazyVim acaba abrindo o NeoTree. Para revisar
+uma pasta ou um commit inteiro, use o Diffview (`<leader>gv` ou `<leader>gV`).
