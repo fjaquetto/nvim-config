@@ -1,0 +1,18 @@
+tt.*
+.tests
+doc/tags
+debug
+.repro
+foo.*
+*.log
+data
+
+# Symlink gerado pelo Omarchy (recriado por omarchy-nvim-setup)
+lua/plugins/theme.lua
+
+# Backups e arquivos temporários locais
+*.bak.*
+*.swp
+*.swo
+*~
+.DS_Store
