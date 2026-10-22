@@ -7,6 +7,12 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = {
+      -- Roslyn can report inlay hint columns past the end of a line while the
+      -- buffer is being edited, which makes Neovim 0.12 throw an extmark error.
+      -- Disable C# inlay hints until the server/runtime combination is fixed.
+      inlay_hints = {
+        exclude = { "vue", "cs" },
+      },
       servers = {
         csharp_ls = { enabled = false },
         omnisharp = { enabled = false },
