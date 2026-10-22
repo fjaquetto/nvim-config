@@ -91,7 +91,9 @@ Fluxo:
 2. `<leader>db` marca um breakpoint.
 3. `<leader>dc` inicia o debug.
 4. A configuração `Launch .NET project (build)` executa `dotnet build -c Debug`,
-   localiza a DLL e inicia o `netcoredbg`.
+   localiza a DLL e inicia o `netcoredbg`. Se você iniciar o debug a partir de
+   uma biblioteca, ela procura o projeto executável que referencia essa
+   biblioteca e usa a DLL dele.
 5. `<leader>du` mostra/esconde o DAP UI.
 6. `<leader>dr` abre o REPL.
 7. `<leader>dt` encerra a sessão.
@@ -155,7 +157,7 @@ git restore .
 Voltar para uma tag estável:
 
 ```bash
-git reset --hard stable-2026-10-22
+git reset --hard stable-2026-10-22.1
 nvim --headless "+Lazy! restore" +qa
 ```
 
@@ -168,7 +170,7 @@ git revert <hash>
 Testar uma versão antiga sem mexer na `main`:
 
 ```bash
-git switch -c teste-config stable-2026-10-22
+git switch -c teste-config stable-2026-10-22.1
 nvim
 git switch main
 git branch -D teste-config
