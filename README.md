@@ -20,7 +20,7 @@ Configuração pessoal do Neovim baseada em LazyVim + Omarchy, com Diffview e
 mv ~/.config/nvim ~/.config/nvim.backup.$(date +%Y%m%d-%H%M%S)
 
 # 2. Clone este repositório
-git clone <URL-DO-REPOSITORIO> ~/.config/nvim
+git clone https://github.com/Fjaquetto/nvim-config.git ~/.config/nvim
 
 # 3. Execute o bootstrap
 cd ~/.config/nvim
