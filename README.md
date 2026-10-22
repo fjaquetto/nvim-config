@@ -11,6 +11,7 @@ Configuração pessoal do Neovim baseada em LazyVim + Omarchy, com Diffview e
 - `fd`
 - `lazygit`
 - Uma Nerd Font (o Omarchy já usa JetBrainsMono Nerd Font)
+- .NET SDK 10 (para os recursos de C#)
 - Opcional: Omarchy, para o tema integrado
 
 ## Instalação em outra máquina
@@ -51,12 +52,60 @@ omarchy-nvim-setup
 Não use `omarchy-nvim-refresh` para isso: ele é destrutivo e sobrescreve o
 config atual com o padrão do Omarchy.
 
-## Servidores LSP
+## C# no NeoTree
+
+Com um `.csproj` no projeto:
+
+1. Selecione a pasta onde o arquivo deve ficar.
+2. Pressione `N` no NeoTree.
+3. Escolha o tipo: `class`, `interface`, `struct`, `record`, `record struct`
+   ou `enum`.
+4. Digite o nome do tipo.
+
+O arquivo é criado na pasta selecionada. O namespace é calculado a partir do
+`<RootNamespace>` do `.csproj` mais o caminho relativo da pasta. Exemplo:
+
+```csharp
+namespace MyApp.Features.Orders;
+
+public class OrderService
+{
+}
+```
+
+O comando só funciona dentro de um projeto C#. Se você estiver na raiz de uma
+solution com vários projetos, selecione uma pasta dentro do projeto desejado.
+
+## Debug de .NET
+
+O debug usa:
+
+- `nvim-dap`
+- `nvim-dap-ui`
+- `nvim-dap-virtual-text`
+- `netcoredbg`
+
+Fluxo:
+
+1. Abra um arquivo `.cs` do projeto.
+2. `<leader>db` marca um breakpoint.
+3. `<leader>dc` inicia o debug.
+4. A configuração `Launch .NET project (build)` executa `dotnet build -c Debug`,
+   localiza a DLL e inicia o `netcoredbg`.
+5. `<leader>du` mostra/esconde o DAP UI.
+6. `<leader>dr` abre o REPL.
+7. `<leader>dt` encerra a sessão.
+
+Também existe a configuração `Attach to .NET process` para anexar a um processo
+já em execução. Arquivos `.vscode/launch.json` também são lidos pelo `nvim-dap`.
+
+## Servidores LSP e ferramentas
 
 Os pacotes do Mason não são versionados pelo `lazy-lock.json`. Nesta máquina
 estão instalados:
 
-- `csharp-language-server`
+- `roslyn-language-server` (C#)
+- `netcoredbg` (debug .NET)
 - `lua-language-server`
 - `rust-analyzer`
 - `shfmt`
@@ -65,8 +114,11 @@ estão instalados:
 No outro computador, instale pelo `:Mason` ou por:
 
 ```vim
-:MasonInstall csharp-language-server lua-language-server rust-analyzer shfmt stylua
+:MasonInstall roslyn-language-server netcoredbg lua-language-server rust-analyzer shfmt stylua
 ```
+
+O `roslyn-language-server` substitui o antigo `csharp-language-server` e o
+OmniSharp na configuração atual.
 
 ## Atualização
 
@@ -145,5 +197,14 @@ nvim -u NONE
 | `<leader>gV` | Diffview do último commit |
 | `<leader>gH` | Histórico do arquivo atual |
 | `<leader>gg` | LazyGit dentro do Neovim |
+| `N` no NeoTree | Criar classe/interface/struct/record/enum C# |
+| `<leader>db` | Alternar breakpoint |
+| `<leader>dc` | Iniciar/continuar debug |
+| `<leader>di` | Step into |
+| `<leader>do` | Step out |
+| `<leader>dO` | Step over |
+| `<leader>du` | Mostrar/esconder DAP UI |
+| `<leader>dr` | Abrir REPL do debug |
+| `<leader>dt` | Encerrar sessão de debug |
 
 No LazyGit, `ctrl+t` abre o `nvimdiff` para o arquivo selecionado.
