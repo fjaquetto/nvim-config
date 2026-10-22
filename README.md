@@ -200,9 +200,10 @@ nvim -u NONE
 | Atalho | Ação |
 |---|---|
 | `<leader>ghd` | Diff side-by-side do arquivo atual (Gitsigns) |
-| `<leader>gv` | Diffview da working tree |
+| `<leader>gv` | Diffview da working tree (abre/fecha) |
 | `<leader>gV` | Diffview do último commit |
 | `<leader>gH` | Histórico do arquivo atual |
+| `<leader>gX` | Fechar o Diffview |
 | `<leader>gg` | LazyGit dentro do Neovim |
 | `N` no NeoTree | Criar classe/interface/struct/record/enum C# |
 | `<leader>db` | Alternar breakpoint |
@@ -213,6 +214,8 @@ nvim -u NONE
 | `<leader>du` | Mostrar/esconder DAP UI |
 | `<leader>dr` | Abrir REPL do debug |
 | `<leader>dt` | Encerrar sessão de debug |
+
+O Diffview também fecha com `:DiffviewClose` ou `:tabclose`.
 
 No LazyGit, `ctrl+t` abre o `nvimdiff` para o arquivo selecionado. Se você
 selecionar uma **pasta**, o LazyGit usa `git difftool --dir-diff`; o `nvimdiff`
