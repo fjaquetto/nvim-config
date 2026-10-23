@@ -162,7 +162,7 @@ git restore .
 Voltar para uma tag estável:
 
 ```bash
-git reset --hard stable-2026-10-22.2
+git reset --hard stable-2026-10-22.3
 nvim --headless "+Lazy! restore" +qa
 ```
 
@@ -175,7 +175,7 @@ git revert <hash>
 Testar uma versão antiga sem mexer na `main`:
 
 ```bash
-git switch -c teste-config stable-2026-10-22.2
+git switch -c teste-config stable-2026-10-22.3
 nvim
 git switch main
 git branch -D teste-config
