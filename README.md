@@ -106,26 +106,26 @@ já em execução. Arquivos `.vscode/launch.json` também são lidos pelo `nvim-
 Os pacotes do Mason não são versionados pelo `lazy-lock.json`. Nesta máquina
 estão instalados:
 
-- `roslyn-language-server` (C#)
-- `netcoredbg` (debug .NET)
+- `csharp-ls` 0.28 (C#, instalado via `dotnet tool` e usando inlay hints)
+- `netcoredbg` (debug .NET, via Mason)
 - `lua-language-server`
 - `rust-analyzer`
 - `shfmt`
 - `stylua`
 
-No outro computador, instale pelo `:Mason` ou por:
+No outro computador, instale o C# e o debug com:
 
-```vim
-:MasonInstall roslyn-language-server netcoredbg lua-language-server rust-analyzer shfmt stylua
+```bash
+dotnet tool install -g csharp-ls
 ```
 
-O `roslyn-language-server` substitui o antigo `csharp-language-server` e o
-OmniSharp na configuração atual.
+```vim
+:MasonInstall netcoredbg lua-language-server rust-analyzer shfmt stylua
+```
 
-Os **inlay hints de C#** estão desativados (`inlay_hints.exclude = { "cs" }`)
-porque o Roslyn pode enviar colunas fora do range durante a edição, causando
-erro de extmark no Neovim 0.12. Isso não afeta diagnóstico, completion nem
-debug.
+Esta branch testa o `csharp-ls` com inlay hints no lugar do Roslyn. O Roslyn
+fica desativado durante o teste. Se o erro de extmark continuar, o problema é
+do runtime de inlay hints do Neovim 0.12, não do servidor.
 
 ## Atualização
 
@@ -217,7 +217,8 @@ nvim -u NONE
 
 O Diffview também fecha com `:DiffviewClose` ou `:tabclose`.
 
-No LazyGit, `ctrl+t` abre o `nvimdiff` para o arquivo selecionado. Se você
-selecionar uma **pasta**, o LazyGit usa `git difftool --dir-diff`; o `nvimdiff`
-não faz diff de diretórios e o LazyVim acaba abrindo o NeoTree. Para revisar
-uma pasta ou um commit inteiro, use o Diffview (`<leader>gv` ou `<leader>gV`).
+No LazyGit, `ctrl+t` usa `nvim --clean -R -f -d` para abrir o diff sem carregar
+LSP, plugins ou o Roslyn — assim ele não dispara compilação. Se você selecionar
+uma **pasta**, o LazyGit usa `git difftool --dir-diff`; o `nvimdiff` não faz diff
+de diretórios e o LazyVim abre o NeoTree. Para revisar uma pasta ou um commit
+inteiro, use o Diffview (`<leader>gv` ou `<leader>gV`).

@@ -1,20 +1,44 @@
 return {
   {
     "seblyng/roslyn.nvim",
-    ft = "cs",
-    opts = {},
+    enabled = false,
   },
   {
     "neovim/nvim-lspconfig",
     opts = {
-      -- Roslyn can report inlay hint columns past the end of a line while the
-      -- buffer is being edited, which makes Neovim 0.12 throw an extmark error.
-      -- Disable C# inlay hints until the server/runtime combination is fixed.
+      -- Teste: csharp-ls também fornece inlay hints. Se o erro de extmark
+      -- continuar, o problema é do runtime do Neovim, não do servidor.
       inlay_hints = {
-        exclude = { "vue", "cs" },
+        exclude = { "vue" },
       },
       servers = {
-        csharp_ls = { enabled = false },
+        csharp_ls = {
+          cmd = (function()
+            local global = vim.fn.expand("~/.dotnet/tools/csharp-ls")
+            if vim.fn.executable(global) == 1 then
+              return { global }
+            end
+            return { "csharp-ls" }
+          end)(),
+          -- csharp-ls only publishes inlayHintProvider when the client
+          -- does not advertise dynamic registration for inlay hints.
+          capabilities = (function()
+            local override = {
+              textDocument = {
+                inlayHint = { dynamicRegistration = false },
+              },
+            }
+            local ok, blink = pcall(require, "blink.cmp")
+            if ok then
+              return blink.get_lsp_capabilities(override)
+            end
+            return vim.tbl_deep_extend("force", vim.lsp.protocol.make_client_capabilities(), override)
+          end)(),
+          init_options = {
+            AutomaticWorkspaceInit = true,
+          },
+        },
+        roslyn_ls = { enabled = false },
         omnisharp = { enabled = false },
       },
     },
@@ -23,7 +47,7 @@ return {
     "mason-org/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      for _, package in ipairs({ "netcoredbg", "roslyn-language-server" }) do
+      for _, package in ipairs({ "netcoredbg", "csharp-language-server" }) do
         if not vim.tbl_contains(opts.ensure_installed, package) then
           table.insert(opts.ensure_installed, package)
         end
