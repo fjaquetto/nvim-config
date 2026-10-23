@@ -218,7 +218,14 @@ nvim -u NONE
 O Diffview também fecha com `:DiffviewClose` ou `:tabclose`.
 
 No LazyGit, `ctrl+t` usa `nvim --clean -R -f -d` para abrir o diff sem carregar
-LSP, plugins ou o Roslyn — assim ele não dispara compilação. Se você selecionar
-uma **pasta**, o LazyGit usa `git difftool --dir-diff`; o `nvimdiff` não faz diff
-de diretórios e o LazyVim abre o NeoTree. Para revisar uma pasta ou um commit
-inteiro, use o Diffview (`<leader>gv` ou `<leader>gV`).
+LSP, plugins ou o Roslyn — assim ele não dispara compilação. Para configurar em
+outra máquina:
+
+```bash
+git config --global difftool.nvimdiff.cmd \
+  'nvim --clean -R -f -d -c "wincmd l" "$LOCAL" "$REMOTE"'
+```
+
+Se você selecionar uma **pasta**, o LazyGit usa `git difftool --dir-diff`; o
+`nvimdiff` não faz diff de diretórios e o LazyVim abre o NeoTree. Para revisar
+uma pasta ou um commit inteiro, use o Diffview (`<leader>gv` ou `<leader>gV`).
