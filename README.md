@@ -12,6 +12,7 @@ Configuração pessoal do Neovim baseada em LazyVim + Omarchy, com Diffview e
 - `lazygit`
 - Uma Nerd Font (o Omarchy já usa JetBrainsMono Nerd Font)
 - .NET SDK 10 (para os recursos de C#)
+- Rust toolchain com `cargo`/`rustfmt`/`clippy` (para Rust)
 - Opcional: Omarchy, para o tema integrado
 
 ## Instalação em outra máquina
@@ -101,15 +102,67 @@ Fluxo:
 Também existe a configuração `Attach to .NET process` para anexar a um processo
 já em execução. Arquivos `.vscode/launch.json` também são lidos pelo `nvim-dap`.
 
+## Rust
+
+O Rust usa `rustaceanvim` + `rust-analyzer` e `codelldb`.
+
+### Criar arquivos pelo NeoTree
+
+Dentro de um projeto com `Cargo.toml`, selecione a pasta e pressione `N`.
+O menu oferece:
+
+- `module`
+- `struct`
+- `enum`
+- `trait`
+
+O gerador cria o arquivo `.rs` e adiciona a declaração `mod nome;` no módulo
+pai. No nível de `src/lib.rs`, usa `pub mod`; nos módulos internos, usa `mod`,
+que é o padrão do projeto `torrx`.
+
+Exemplo: criar `OrderService` em `src/domain` gera:
+
+```text
+src/domain/order_service.rs
+```
+
+e adiciona em `src/domain/mod.rs`:
+
+```rust
+mod order_service;
+```
+
+O arquivo nasce com:
+
+```rust
+#[derive(Debug)]
+pub struct OrderService {
+}
+```
+
+Para tipos dentro de arquivos existentes, os snippets do `friendly-snippets`
+continuam sendo a forma mais idiomática.
+
+### Debug
+
+1. Abra um arquivo `.rs`.
+2. `<leader>db` marca o breakpoint.
+3. `<leader>dc` abre os alvos do Rust (`RustLsp debuggables`).
+4. Escolha o binário, exemplo ou teste.
+5. `<leader>dr` abre o REPL; `<leader>du` abre o DAP UI.
+
+O `codelldb` é instalado pelo Mason através do extra `lang.rust`.
+
 ## Servidores LSP e ferramentas
 
 Os pacotes do Mason não são versionados pelo `lazy-lock.json`. Nesta máquina
 estão instalados:
 
 - `csharp-ls` 0.28 (C#, instalado via `dotnet tool` e usando inlay hints)
+- `rust-analyzer` (Rust, via Mason/rustaceanvim)
+- `codelldb` (debug Rust, via Mason)
 - `netcoredbg` (debug .NET, via Mason)
 - `lua-language-server`
-- `rust-analyzer`
 - `shfmt`
 - `stylua`
 
@@ -120,12 +173,13 @@ dotnet tool install -g csharp-ls
 ```
 
 ```vim
-:MasonInstall netcoredbg lua-language-server rust-analyzer shfmt stylua
+:MasonInstall netcoredbg codelldb rust-analyzer lua-language-server shfmt stylua
 ```
 
-Esta branch testa o `csharp-ls` com inlay hints no lugar do Roslyn. O Roslyn
-fica desativado durante o teste. Se o erro de extmark continuar, o problema é
-do runtime de inlay hints do Neovim 0.12, não do servidor.
+O `csharp-ls` é o LSP de C#; o Roslyn fica desativado. O Rust usa
+`rust-analyzer` via `rustaceanvim`, com `codelldb` para debug. Se o erro de
+extmark de inlay hints aparecer em alguma linguagem, o problema é do runtime de
+inlay hints do Neovim, não do servidor.
 
 ## Atualização
 
@@ -205,7 +259,7 @@ nvim -u NONE
 | `<leader>gH` | Histórico do arquivo atual |
 | `<leader>gX` | Fechar o Diffview |
 | `<leader>gg` | LazyGit dentro do Neovim |
-| `N` no NeoTree | Criar classe/interface/struct/record/enum C# |
+| `N` no NeoTree | Criar tipo C# ou item Rust, conforme o projeto |
 | `<leader>db` | Alternar breakpoint |
 | `<leader>dc` | Iniciar/continuar debug |
 | `<leader>di` | Step into |
