@@ -16,10 +16,38 @@ return {
           cmd = (function()
             local global = vim.fn.expand("~/.dotnet/tools/csharp-ls")
             if vim.fn.executable(global) == 1 then
-              return { global }
+              return { global, "--features", "metadata-uris" }
             end
-            return { "csharp-ls" }
+            return { "csharp-ls", "--features", "metadata-uris" }
           end)(),
+          -- gd/gI/gy passam pelo handler local para abrir o código
+          -- descompilado de DLLs externas em buffers somente leitura.
+          keys = {
+            {
+              "gd",
+              function()
+                require("config.csharp_metadata").definition()
+              end,
+              desc = "Goto Definition",
+              has = "textDocument/definition",
+            },
+            {
+              "gI",
+              function()
+                require("config.csharp_metadata").implementation()
+              end,
+              desc = "Goto Implementation",
+              has = "textDocument/implementation",
+            },
+            {
+              "gy",
+              function()
+                require("config.csharp_metadata").type_definition()
+              end,
+              desc = "Goto T[y]pe Definition",
+              has = "textDocument/typeDefinition",
+            },
+          },
           -- csharp-ls only publishes inlayHintProvider when the client
           -- does not advertise dynamic registration for inlay hints.
           capabilities = (function()

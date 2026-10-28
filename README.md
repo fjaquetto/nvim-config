@@ -77,6 +77,24 @@ public class OrderService
 O comando só funciona dentro de um projeto C#. Se você estiver na raiz de uma
 solution com vários projetos, selecione uma pasta dentro do projeto desejado.
 
+### Navegação em DLLs externas
+
+O `csharp-ls` é iniciado com `--features metadata-uris`. Com isso, os atalhos
+de navegação também abrem símbolos definidos em assemblies externos:
+
+| Atalho | Ação |
+|---|---|
+| `gd` | Definição |
+| `gI` | Implementação |
+| `gy` | Definição do tipo |
+
+Quando o símbolo vem de uma DLL, o Neovim abre um buffer somente leitura com o
+código C# descompilado pelo ILSpy (`csharp:/.../decompiled/...`). Os mesmos
+atalhos continuam funcionando dentro desse buffer. Se houver mais de um
+destino, o resultado vai para o quickfix.
+
+Isso é código C# descompilado, não o disassembly de instruções de máquina.
+
 ## Debug de .NET
 
 O debug usa:
@@ -176,7 +194,8 @@ dotnet tool install -g csharp-ls
 :MasonInstall netcoredbg codelldb rust-analyzer lua-language-server shfmt stylua
 ```
 
-O `csharp-ls` é o LSP de C#; o Roslyn fica desativado. O Rust usa
+O `csharp-ls` 0.28 é o LSP de C#, iniciado com `--features metadata-uris` para
+permitir a navegação em DLLs externas; o Roslyn fica desativado. O Rust usa
 `rust-analyzer` via `rustaceanvim`, com `codelldb` para debug. Se o erro de
 extmark de inlay hints aparecer em alguma linguagem, o problema é do runtime de
 inlay hints do Neovim, não do servidor.
