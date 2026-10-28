@@ -235,7 +235,7 @@ git restore .
 Voltar para uma tag estável:
 
 ```bash
-git reset --hard stable-2026-10-23
+git reset --hard stable-2026-10-28
 nvim --headless "+Lazy! restore" +qa
 ```
 
