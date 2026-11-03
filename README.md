@@ -44,11 +44,18 @@ Depois abra o Neovim e rode:
 ## Tema do Omarchy
 
 O arquivo `lua/plugins/theme.lua` é um symlink específico da máquina e **não** é
-versionado. Em uma máquina Omarchy, ele é recriado por:
+versionado. Ele aponta para o `neovim.lua` gerado pelo Omarchy:
 
-```bash
-omarchy-nvim-setup
-```
+- Omarchy 4: `~/.local/state/omarchy/current/theme/neovim.lua`
+- Omarchy 3.8: `~/.config/omarchy/current/theme/neovim.lua`
+
+O `bootstrap.sh` recria esse link automaticamente quando o arquivo existe. Se
+já houver um `theme.lua` estático, ele é preservado como
+`theme.lua.bak.<data>` antes da troca. Em máquinas com `omarchy-nvim-setup`, o
+comando continua sendo usado; nas demais, o symlink é criado diretamente.
+
+O `aether.nvim` observa o arquivo do Omarchy e dispara `User LazyReload`, então
+o tema também atualiza em um Neovim já aberto, sem reiniciar.
 
 Não use `omarchy-nvim-refresh` para isso: ele é destrutivo e sobrescreve o
 config atual com o padrão do Omarchy.
@@ -235,7 +242,7 @@ git restore .
 Voltar para uma tag estável:
 
 ```bash
-git reset --hard stable-2026-11-01
+git reset --hard stable-2026-11-02
 nvim --headless "+Lazy! restore" +qa
 ```
 
